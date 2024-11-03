@@ -1,18 +1,42 @@
 <script setup>
-import { ref } from 'vue'
+import { ref } from 'vue';
 
-const items = ref([
-  { id: 1, label: 'toto' },
-  { id: 2, label: 'tata' },
-  { id: 3, label: 'titi' },
-  { id: 4, label: 'heyy' },
-])
+const items = ref([]);
+const newItem = ref('');
+const newItemHighPriority = ref(false);
+const editing = ref(false);
+const saveItems = () => {
+  items.value.push({ id: items.value.length + 1, label: newItem.value });
+  newItem.value = '';
+  console.log(items);
+};
+const doEdit = e => {
+  editing.value = e;
+  newItem.value = '';
+};
 </script>
 
 <template>
+  <div class="header">
+    <button v-if="editing" class="btn" @click="doEdit(false)">Cancel</button>
+    <button v-else class="btn btn-primary" @click="doEdit(true)">
+      Add Item
+    </button>
+  </div>
+  <form v-if="editing" @submit.prevent="saveItems" class="add-item-form">
+    <input v-model="newItem" type="text" placeHolder="saisir produit" />
+    <label>
+      <input v-model="newItemHighPriority" type="checkbox" />
+      produit urgent
+    </label>
+    <button :disabled="!newItem.length" class="btn btn-primary">
+      enregistrer produit
+    </button>
+  </form>
   <ul>
     <li v-for="{ id, label } in items" :key="id">
       {{ label }}
     </li>
   </ul>
+  <p v-if="editing && !items.length">aucun produit ajouté</p>
 </template>
