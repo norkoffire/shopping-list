@@ -7,6 +7,7 @@ const newItem = ref('');
 const newItemLength = computed(() => newItem.value.length);
 const newItemHighPriority = ref(false);
 const editing = ref(false);
+
 const saveItems = () => {
   items.value.push({
     id: items.value.length + 1,
@@ -16,24 +17,24 @@ const saveItems = () => {
   });
   newItem.value = '';
   newItemHighPriority.value = '';
-  console.log(items);
+  console.log('heyyyy', items);
 };
+
 const doEdit = e => {
   editing.value = e;
   newItem.value = '';
 };
+
 const togglePurchased = item => {
-  console.log(item);
   item.purchased = !item.purchased;
-  console.log(item);
 };
 </script>
 
 <template>
   <div class="header">
-    <button v-if="editing" class="btn" @click="doEdit(false)">Cancel</button>
+    <button v-if="editing" class="btn" @click="doEdit(false)">Annuler</button>
     <button v-else class="btn btn-primary" @click="doEdit(true)">
-      Add Item
+      Ajouter un produit
     </button>
   </div>
   <form v-if="editing" @submit.prevent="saveItems" class="add-item-form">
