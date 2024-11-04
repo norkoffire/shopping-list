@@ -6,13 +6,24 @@ const newItem = ref('');
 const newItemHighPriority = ref(false);
 const editing = ref(false);
 const saveItems = () => {
-  items.value.push({ id: items.value.length + 1, label: newItem.value });
+  items.value.push({
+    id: items.value.length + 1,
+    label: newItem.value,
+    purchased: false,
+    highPriority: newItemHighPriority.value,
+  });
   newItem.value = '';
+  newItemHighPriority.value = '';
   console.log(items);
 };
 const doEdit = e => {
   editing.value = e;
   newItem.value = '';
+};
+const togglePurchased = item => {
+  console.log(item);
+  item.purchased = !item.purchased;
+  console.log(item);
 };
 </script>
 
@@ -34,8 +45,13 @@ const doEdit = e => {
     </button>
   </form>
   <ul>
-    <li v-for="{ id, label } in items" :key="id">
-      {{ label }}
+    <li
+      v-for="item in items"
+      @click="togglePurchased(item)"
+      :key="item.id"
+      :class="{ priority: item.highPriority, strikeout: item.purchased }"
+    >
+      {{ item.label }}
     </li>
   </ul>
   <p v-if="editing && !items.length">aucun produit ajouté</p>
