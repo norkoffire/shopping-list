@@ -1,8 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const items = ref([]);
+const reversedItems = computed(() => [...items.value].reverse());
 const newItem = ref('');
+const newItemLength = computed(() => newItem.value.length);
 const newItemHighPriority = ref(false);
 const editing = ref(false);
 const saveItems = () => {
@@ -35,7 +37,13 @@ const togglePurchased = item => {
     </button>
   </div>
   <form v-if="editing" @submit.prevent="saveItems" class="add-item-form">
-    <input v-model="newItem" type="text" placeHolder="saisir produit" />
+    <input
+      v-model="newItem"
+      type="text"
+      placeHolder="saisir produit"
+      maxlength="200"
+    />
+    {{ newItemLength }} / 200 charactères
     <label>
       <input v-model="newItemHighPriority" type="checkbox" />
       produit urgent
@@ -46,7 +54,7 @@ const togglePurchased = item => {
   </form>
   <ul>
     <li
-      v-for="item in items"
+      v-for="item in reversedItems"
       @click="togglePurchased(item)"
       :key="item.id"
       :class="{ priority: item.highPriority, strikeout: item.purchased }"
